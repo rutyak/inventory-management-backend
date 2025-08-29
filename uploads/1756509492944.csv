@@ -1,0 +1,13 @@
+Product Name,Product ID,Category,Price,Quantity,Unit,Expiry Date,Threshold Value
+T-Shirt,9f7c2b12-1a3d-4c7b-9f88-12ab34cd56ef,Clothing,250,12,Pcs,2026-03-05,40
+Jeans,41d7a29f-84c1-4c9b-a51d-98bc12de76aa,Clothing,120,35,Pcs,2026-04-12,30
+Jacket,5c9b6f21-0d5e-48a3-b6d4-45cd91e83b11,Clothing,80,60,Pcs,2026-08-20,15
+Sneakers,a12f83e4-93ab-49ff-9b3d-19ce81f71f77,Clothing,70,50,Pairs,2026-05-25,20
+Cap,8d3a27a4-3e3c-44b8-82e0-72a8e567f411,Clothing,150,8,Pcs,2026-07-10,25
+
+Smartphone,3b4d95e6-7c9a-43b5-a2f6-91de78c62d44,Electronics,50,300,Pcs,2026-01-15,10
+Laptop,bb19a92a-54f8-4f03-95f7-24c27b2d2c3f,Electronics,30,800,Pcs,2026-02-20,8
+Headphones,1d2f7b34-9c27-4c81-8d62-92bd9cf3a1d8,Electronics,100,40,Pcs,2026-06-18,15
+Smartwatch,fa2d6719-27bc-41cb-9c4a-8ef76b7d83e0,Electronics,60,120,Pcs,2026-03-22,12
+Tablet,66e41a3b-8f53-4985-bc7b-42f27db82f7b,Electronics,40,250,Pcs,2026-05-30,10
+

@@ -1,0 +1,12 @@
+Product Name,Product ID,Category,Price,Quantity,Unit,Expiry Date,Threshold Value
+T-shirt,PCOD002,Bakery,30,20,Pack,2025-11-15,8
+Pant,PEOD003,Fruit,120,15,Kg,2025-10-10,10
+Shirt,PFOD004,Grains,60,25,Kg,2026-01-20,12
+Pant,PEOD003,Fruit,120,15,Kg,2025-10-10,50
+Shoes,PFOD004,Grains,60,12,Kg,2026-01-20,0
+
+Laptop,RCOD002,Bakery,30,20,Pack,2025-11-15,8
+Mouse,UEOD003,Fruit,120,15,Kg,2025-10-10,10
+Keyboard,TFOD004,Grains,60,25,Kg,2026-01-20,12
+Trimmer,IEOD003,Fruit,120,15,Kg,2025-10-10,50
+Toast Machine,KFOD004,Grains,60,12,Kg,2026-01-20,0

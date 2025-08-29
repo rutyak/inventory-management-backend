@@ -1,0 +1,11 @@
+Product Name,Product ID,Category,Price,Quantity,Unit,Expiry Date,Threshold Value
+Smartphone,PROD016,Electronics,50,300,Pcs,2026-01-15,10
+Laptop,PROD017,Electronics,30,800,Pcs,2026-02-20,8
+Headphones,PROD018,Electronics,100,40,Pcs,2026-06-18,15
+Smartwatch,PROD019,Electronics,60,120,Pcs,2026-03-22,12
+Tablet,PROD020,Electronics,40,250,Pcs,2026-05-30,10
+T-Shirt,PROD011,Clothing,250,12,Pcs,2026-03-05,40
+Jeans,PROD012,Clothing,120,35,Pcs,2026-04-12,30
+Jacket,PROD013,Clothing,80,60,Pcs,2026-08-20,15
+Sneakers,PROD014,Clothing,70,50,Pairs,2026-05-25,20
+Cap,PROD015,Clothing,150,8,Pcs,2026-07-10,25

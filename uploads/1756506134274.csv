@@ -1,0 +1,4 @@
+Product Name,Product ID,Category,Price,Quantity,Unit,Expiry Date,Threshold Value
+Bread,PROD002,Bakery,30,20,Pack,2025-11-15,8
+Apple,PROD003,Fruit,120,15,Kg,2025-10-10,10
+Rice,PROD004,Grains,60,25,Kg,2026-01-20,12
