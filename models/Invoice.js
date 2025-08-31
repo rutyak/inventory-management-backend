@@ -8,6 +8,9 @@ const invoiceSchema = new mongoose.Schema(
       unique: true,
       trim: true,
     },
+    invoiceDate: {
+      type: String,
+    },
     referenceNumber: {
       type: String,
       required: [true, "Reference Number is required"],
@@ -15,29 +18,29 @@ const invoiceSchema = new mongoose.Schema(
     },
     amount: {
       type: Number,
-      required: [true, "Amount is required"],
       min: [0, "Amount cannot be negative"],
     },
     status: {
       type: String,
-      enum: ["Pending", "Paid", "Overdue", "Cancelled"],
-      default: "Pending",
+      enum: ["Unpaid", "Paid"],
+      default: "Unpaid",
       required: true,
     },
     dueDate: {
-      type: Date,
+      type: String,
       required: [true, "Due date is required"],
-      validate: {
-        validator: function (value) {
-          return value > new Date(); // must be a future date
-        },
-        message: "Due date must be in the future",
-      },
+    },
+    productId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Product",
+      required: true,
+    },
+    quantity: {
+      type: String,
     },
   },
   { timestamps: true }
 );
 
 const Invoice = mongoose.model("Invoice", invoiceSchema);
-
 module.exports = Invoice;
