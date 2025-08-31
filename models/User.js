@@ -2,13 +2,9 @@ const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema(
   {
-    fistname: {
+    name: {
       type: String,
-      required: [true, "Please enter your firstname"],
-    },
-    lastname: {
-      type: String,
-      required: [true, "Please enter your lastname"],
+      required: [true, "Please enter your name"],
     },
     email: {
       type: String,
@@ -21,6 +17,8 @@ const userSchema = new mongoose.Schema(
       required: [true, "Please enter a password"],
       minlength: 6,
     },
+    resetOtp: { type: String },
+    resetOtpExpiry: { type: Date },
   },
   { timestamps: true }
 );
