@@ -3,8 +3,12 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const User = require("../models/User.js");
+const validateSignup = require("../utils/validateSignup.js");
+const validateEmail = require("../utils/validateEmail.js");
+const validatePassword = require("../utils/validatePassword.js");
+require("dotenv").config();
 
-const userRouter = express.Router();
+const authRouter = express.Router();
 
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET_KEY, { expiresIn: "1d" });
@@ -18,9 +22,11 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-//register
-userRouter.post("/register", async (req, res, next) => {
+// REGISTER
+authRouter.post("/register", async (req, res) => {
   try {
+    validateSignup(req);
+
     const { name, email, password } = req.body;
 
     if (!name || !email || !password) {
@@ -40,25 +46,21 @@ userRouter.post("/register", async (req, res, next) => {
       password: hashedPassword,
     });
 
-    if (user) {
-      res.status(201).json({
-        message: "User registered successfully",
-        user: {
-          _id: user._id,
-          name: user.name,
-          email: user.email,
-        },
-      });
-    } else {
-      res.status(400).json({ message: "Invalid user data" });
-    }
+    res.status(201).json({
+      message: "User registered successfully",
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+      },
+    });
   } catch (error) {
-    next(error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 });
 
-// Login
-userRouter.post("/login", async (req, res, next) => {
+// LOGIN
+authRouter.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -70,34 +72,40 @@ userRouter.post("/login", async (req, res, next) => {
 
     const user = await User.findOne({ email });
 
-    if (user && (await bcrypt.compare(password, user.password))) {
-      const token = generateToken(user._id);
-
-      res.cookie("token", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
-      });
-
-      return res.json({
-        message: "Login successful",
-        token,
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-      });
+    if (!user) {
+      return res.status(401).json({ message: "Invalid email or password" });
     }
 
-    res.status(401).json({ message: "Invalid email or password" });
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
+
+    const token = generateToken(user._id);
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+    });
+
+    res.json({
+      message: "Login successful",
+      token,
+      user: { _id: user._id, name: user.name, email: user.email },
+    });
   } catch (error) {
-    next(error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 });
 
-// Forgot Password - Send OTP
-userRouter.post("/send-otp", async (req, res, next) => {
+// SEND OTP
+authRouter.post("/send-otp", async (req, res) => {
   try {
+    validateEmail(req);
+
     const { email } = req.body;
+
     if (!email) return res.status(400).json({ message: "Email is required" });
 
     const user = await User.findOne({ email });
@@ -119,11 +127,12 @@ userRouter.post("/send-otp", async (req, res, next) => {
 
     res.json({ message: "OTP sent successfully" });
   } catch (error) {
-    next(error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 });
 
-userRouter.post("/verify-otp", async (req, res, next) => {
+// VERIFY OTP
+authRouter.post("/verify-otp", async (req, res) => {
   try {
     const { email, otp } = req.body;
     if (!email || !otp)
@@ -141,12 +150,14 @@ userRouter.post("/verify-otp", async (req, res, next) => {
 
     res.json({ message: "OTP verified successfully" });
   } catch (error) {
-    next(error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 });
 
-userRouter.post("/reset-password", async (req, res, next) => {
+// RESET PASSWORD
+authRouter.post("/reset-password", async (req, res) => {
   try {
+    validatePassword(req);
     const { email, password } = req.body;
     if (!email || !password)
       return res
@@ -164,12 +175,14 @@ userRouter.post("/reset-password", async (req, res, next) => {
 
     res.json({ message: "Password reset successfully" });
   } catch (error) {
-    next(error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 });
 
-userRouter.post("/logout", (req, res) => {
-  res.cookie("jwtToken", null, { expires: new Date(Date.now()) });
-  res.status(200).json({ message: "Logout successfully" });
+// LOGOUT
+authRouter.post("/logout", (req, res) => {
+  res.cookie("token", "", { expires: new Date(0) });
+  res.status(200).json({ message: "Logout successful" });
 });
-module.exports = userRouter;
+
+module.exports = authRouter;

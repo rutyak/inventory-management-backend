@@ -2,11 +2,11 @@ const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const connectDB = require("./config/db.js");
-const userRouter = require("./routes/userRoutes.js");
+const cookieParser = require("cookie-parser");
+const userRouter = require("./routes/userRouter.js");
 const productRouter = require("./routes/productRouter.js");
 const invoiceRouter = require("./routes/invoiceRouter.js");
-
-const cookieParser = require("cookie-parser");
+const authRouter = require("./routes/authRouter.js");
 
 dotenv.config();
 
@@ -24,6 +24,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 
+app.use(authRouter);
 app.use(userRouter);
 app.use(productRouter);
 app.use(invoiceRouter);
