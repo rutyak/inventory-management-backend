@@ -116,6 +116,25 @@ productRouter.post(
   }
 );
 
+productRouter.get("/fetch/products", async (req, res) => {
+  try {
+    const products = await Product.find();
+
+    if (!products) {
+      return res.status(404).json({ message: "Products not found" });
+    }
+
+    res
+      .status(200)
+      .json({ message: "Products fetched successfullly", products });
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to fetch products",
+      error: error.message,
+    });
+  }
+});
+
 // GET /products?page=1&limit=10
 productRouter.get("/products", async (req, res) => {
   try {

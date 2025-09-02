@@ -96,6 +96,28 @@ invoiceRouter.get("/invoices", async (req, res) => {
   }
 });
 
+invoiceRouter.patch("/invoice/:id/open", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const invoice = await Invoice.findById(id);
+    if (!invoice) {
+      return res.status(404).json({ message: "Invoice not found" });
+    }
+
+    invoice.openCount = (invoice.openCount || 0) + 1;
+    await invoice.save();
+
+    res.status(200).json({
+      message: "Invoice open count incremented",
+      invoice,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+});
+
 invoiceRouter.patch("/invoice/:id", async (req, res) => {
   try {
     const { id } = req.params;

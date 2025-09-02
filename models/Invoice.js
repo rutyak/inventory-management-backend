@@ -37,6 +37,10 @@ const invoiceSchema = new mongoose.Schema(
     quantity: {
       type: Number,
     },
+    openCount: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true }
 );
