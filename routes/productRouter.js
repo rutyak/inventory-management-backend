@@ -135,7 +135,6 @@ productRouter.get("/fetch/products", async (req, res) => {
   }
 });
 
-// GET /products?page=1&limit=10
 productRouter.get("/products", async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
