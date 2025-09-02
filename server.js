@@ -18,6 +18,7 @@ const corsOptions = {
   origin: [
     "http://localhost:5173",
     "https://inventory-management-dashboard.netlify.app",
+    "https://inventory-management-frontend-pi-ruby.vercel.app",
   ],
   methods: ["GET", "POST", "PATCH", "DELETE"],
   credentials: true,
