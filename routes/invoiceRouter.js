@@ -6,14 +6,7 @@ const moment = require("moment");
 
 invoiceRouter.post("/invoice", async (req, res) => {
   try {
-    const {
-      invoiceId,
-      invoiceDate,
-      referenceNumber,
-      dueDate,
-      productId,
-      quantity,
-    } = req.body;
+    const { invoiceId, invoiceDate, dueDate, productId, quantity } = req.body;
 
     const productExists = await Product.findById(productId);
     if (!productExists) {
@@ -32,11 +25,10 @@ invoiceRouter.post("/invoice", async (req, res) => {
     const invoice = new Invoice({
       invoiceId,
       invoiceDate: formatedInvoiceDate,
-      referenceNumber,
       amount,
       dueDate: formattedDueDate,
       productId,
-      quantity
+      quantity,
     });
 
     productExists.quantity -= quantity;
@@ -50,6 +42,25 @@ invoiceRouter.post("/invoice", async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+});
+
+invoiceRouter.get("/fetch/invoices", async (req, res) => {
+  try {
+    const invoices = await Invoice.find();
+
+    if (!invoices) {
+      return res.status(404).json({ message: "Invoices not found" });
+    }
+
+    res
+      .status(200)
+      .json({ message: "Invoices fetched successfullly", invoices });
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to fetch invoices",
+      error: error.message,
+    });
   }
 });
 
@@ -94,22 +105,48 @@ invoiceRouter.patch("/invoice/:id", async (req, res) => {
       return res.status(400).json({ message: "Status is required" });
     }
 
-    const invoice = await Invoice.findByIdAndUpdate(
-      id,
-      { status },
-      { new: true }
-    );
+    const validStatuses = ["Paid"];
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({ message: "Invalid status value" });
+    }
 
+    let invoice = await Invoice.findById(id);
     if (!invoice) {
       return res.status(404).json({ message: "Invoice not found" });
     }
 
+    if (status === "Paid" && !invoice.referenceNumber) {
+      const generateReferenceId = async () => {
+        let reference;
+        let exists = true;
+
+        while (exists) {
+          reference =
+            "INV-" +
+            String(Math.floor(1 + Math.random() * 999)).padStart(3, "0");
+          exists = await Invoice.exists({ referenceNumber: reference });
+        }
+
+        return reference;
+      };
+
+      invoice.referenceNumber = await generateReferenceId();
+    }
+
+    invoice.status = status;
+    await invoice.save();
+
     res.status(200).json({
       message: `Invoice status updated to ${status}`,
-      invoice,
+      invoice: {
+        _id: invoice._id,
+        status: invoice.status,
+        referenceNumber: invoice.referenceNumber,
+      },
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Error updating invoice:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 });
 

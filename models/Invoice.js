@@ -13,7 +13,6 @@ const invoiceSchema = new mongoose.Schema(
     },
     referenceNumber: {
       type: String,
-      required: [true, "Reference Number is required"],
       trim: true,
     },
     amount: {
@@ -36,7 +35,7 @@ const invoiceSchema = new mongoose.Schema(
       required: true,
     },
     quantity: {
-      type: String,
+      type: Number,
     },
   },
   { timestamps: true }
